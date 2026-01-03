@@ -9,33 +9,32 @@ import java.util.StringTokenizer;
 
 public class WasServer {
     public static void main(String[] args) {
-        try {
-            ServerSocket serverSocket = new ServerSocket(8080);
+        try (ServerSocket serverSocket = new ServerSocket(8080);) {
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println(socket.getPort());
                 System.out.println(socket.getInetAddress());
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-                String line;
-                while((line = bufferedReader.readLine()) != null && !line.isEmpty()){
-                    System.out.println(line);
-                }
-
-                if(line == null) {
+                try {
+                    HttpRequest httpRequest = new HttpRequest(socket.getInputStream());
+                    System.out.println("httpRequest.getHttpRequestMethod() = " + httpRequest.getHttpRequestMethod());
+                    System.out.println("httpRequest.getUrl() = " + httpRequest.getUrl());
+                    System.out.println("httpRequest.getUrlParameters().toString() = " + httpRequest.getUrlParameters().toString());
+                    OutputStream out = socket.getOutputStream();
+                    DataOutputStream dataOutputStream = new DataOutputStream(out);
+                    byte[] body = "hello".getBytes();
+                    dataOutputStream.writeBytes("HTTP/1.1 200 OK\n");
+                    dataOutputStream.writeBytes("Content-type:text/html\n");
+                    dataOutputStream.writeBytes("Content-length:" + body.length + "\n\n");
+                    dataOutputStream.write(body, 0, body.length);
+                    dataOutputStream.flush();
                     socket.close();
-                    continue;
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                    System.out.println("close socket");
+                    socket.close();
+                } finally {
+                    socket.close();
                 }
-
-                OutputStream out = socket.getOutputStream();
-                DataOutputStream dataOutputStream = new DataOutputStream(out);
-                byte[] body = "hello".getBytes();
-                dataOutputStream.writeBytes("HTTP/1.1 200 OK\n");
-                dataOutputStream.writeBytes("Content-type:text/html\n");
-                dataOutputStream.writeBytes("Content-length:" + body.length + "\n\n");
-                dataOutputStream.write(body, 0, body.length);
-                dataOutputStream.flush();
-                socket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
