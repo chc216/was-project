@@ -12,10 +12,6 @@ public class HttpRequest {
     private String url;
     private Map<String, String> urlParametersMap = new HashMap<>();
     private Map<String, String> headersMap = new HashMap<>();
-    private String host;
-    private int bodyLength;
-    private String contentType;
-    private byte[] messageBody;
 
     public HttpRequestMethod getHttpRequestMethod() {
         return httpRequestMethod;
@@ -51,13 +47,18 @@ public class HttpRequest {
 
         String header = bufferedReader.readLine();
         while (!header.isEmpty()) {
-            Map.Entry<String, String> parsedHeaderLine = parseHeaderLine(header);
-            headersMap.put(parsedHeaderLine.getKey(), parsedHeaderLine.getValue());
+            parseHeaderLine(header);
             header = bufferedReader.readLine();
         }
-        System.out.println("parse done");
-    }
 
+        //TODO: 요청 메서드에 따라 다르게 body 파싱 여부 다르게 처리하기
+        int len = Integer.parseInt(headersMap.get("content-length"));
+        char[] body = new char[len];
+        bufferedReader.read(body, 0, len);
+        parseBody(body, len, "json");
+
+
+    }
 
     private void parseStartLine(String startLine) {
 
@@ -89,9 +90,24 @@ public class HttpRequest {
 
     }
 
-    private Map.Entry<String, String> parseHeaderLine(String header) {
-        StringTokenizer headerTokenizer = new StringTokenizer(header, ":");
-        return Map.entry(headerTokenizer.nextToken().toLowerCase(), headerTokenizer.nextToken());
+    private void parseHeaderLine(String header) {
+        StringTokenizer headerTokenizer = new StringTokenizer(header, ": ");
+        headersMap.put(headerTokenizer.nextToken().toLowerCase(), headerTokenizer.nextToken());
+    }
+
+    private void parseBody(char[] body, int len, String contentType) {
+        //x-www-form-urlencoded 형식만 지원
+        //TODO: contentType enum 만들기, 파싱 지원하지 않는 contentType 예외처리 로직 만들기
+        System.out.println(body);
+        StringTokenizer bodyTokenizer = new StringTokenizer(String.valueOf(body), "&");
+        while (bodyTokenizer.hasMoreTokens()) {
+            StringTokenizer keyValueTokenizer = new StringTokenizer(bodyTokenizer.nextToken(), "=");
+            String key = keyValueTokenizer.nextToken();
+            String value = keyValueTokenizer.nextToken();
+            System.out.println("value = " + value);
+            System.out.println("key = " + key);
+            //TODO: body content 종류에 따라 저장하는 방식도 달라져야함
+        }
 
     }
 
