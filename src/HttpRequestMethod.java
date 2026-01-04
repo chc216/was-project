@@ -11,4 +11,15 @@ public enum HttpRequestMethod {
             default -> throw new RuntimeException("request method that cant handle");
         };
     }
+
+    public static boolean isAvailableMethod(HttpRequestMethod method) {
+        return switch (method) {
+            case GET -> true;
+            case POST -> true;
+            default -> false;
+        };
+    }
+
+
+
 }
