@@ -19,6 +19,8 @@ public class WasServer {
                     System.out.println("httpRequest.getHttpRequestMethod() = " + httpRequest.getHttpRequestMethod());
                     System.out.println("httpRequest.getUrl() = " + httpRequest.getUrl());
                     System.out.println("httpRequest.getUrlParameters().toString() = " + httpRequest.getUrlParameters().toString());
+                    System.out.println("httpRequest.getHeadersMap().get(\"host\") = " + httpRequest.getHeadersMap().get("content-type"));
+
                     OutputStream out = socket.getOutputStream();
                     DataOutputStream dataOutputStream = new DataOutputStream(out);
                     byte[] body = "hello".getBytes();

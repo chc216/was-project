@@ -10,7 +10,8 @@ public class HttpRequest {
     //http 요청에 관련된 책임을 맡은 클래스
     private HttpRequestMethod httpRequestMethod;
     private String url;
-    private Map<String, String> urlParameters = new HashMap<>();
+    private Map<String, String> urlParametersMap = new HashMap<>();
+    private Map<String, String> headersMap = new HashMap<>();
     private String host;
     private int bodyLength;
     private String contentType;
@@ -25,7 +26,11 @@ public class HttpRequest {
     }
 
     public Map<String, String> getUrlParameters() {
-        return urlParameters;
+        return urlParametersMap;
+    }
+
+    public Map<String, String> getHeadersMap() {
+        return headersMap;
     }
 
     public HttpRequest(InputStream request) throws IOException {
@@ -37,16 +42,25 @@ public class HttpRequest {
 
     private void parse(InputStream request) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(request));
-        parseStartLine(bufferedReader);
-        parseHeaders(bufferedReader);
+
+        String startLine = bufferedReader.readLine();
+        if (startLine == null || startLine.isEmpty()) {
+            throw new IOException("Empty start line");
+        }
+        parseStartLine(startLine);
+
+        String header = bufferedReader.readLine();
+        while (!header.isEmpty()) {
+            Map.Entry<String, String> parsedHeaderLine = parseHeaderLine(header);
+            headersMap.put(parsedHeaderLine.getKey(), parsedHeaderLine.getValue());
+            header = bufferedReader.readLine();
+        }
+        System.out.println("parse done");
     }
 
 
-    private void parseStartLine(BufferedReader bufferedReader) throws IOException {
-        String startLine = bufferedReader.readLine();
-        if (startLine == null || startLine.isEmpty()) {
-            throw new IOException("Empty request");
-        }
+    private void parseStartLine(String startLine) {
+
         StringTokenizer stringTokenizer = new StringTokenizer(startLine, " ");
 
         String httpRequestMethod = stringTokenizer.nextToken();
@@ -70,12 +84,14 @@ public class HttpRequest {
             StringTokenizer keyValueTokenizer = new StringTokenizer(parameter, "=");
             String key = keyValueTokenizer.nextToken();
             String value = keyValueTokenizer.nextToken();
-            urlParameters.put(key, value);
+            urlParametersMap.put(key, value);
         }
 
     }
 
-    private void parseHeaders(BufferedReader bufferedReader) throws IOException {
+    private Map.Entry<String, String> parseHeaderLine(String header) {
+        StringTokenizer headerTokenizer = new StringTokenizer(header, ":");
+        return Map.entry(headerTokenizer.nextToken().toLowerCase(), headerTokenizer.nextToken());
 
     }
 
