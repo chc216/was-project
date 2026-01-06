@@ -15,11 +15,15 @@ public class WasServer {
                 System.out.println(socket.getPort());
                 System.out.println(socket.getInetAddress());
                 try {
-                    HttpRequest httpRequest = new HttpRequest(socket.getInputStream());
-                    System.out.println("httpRequest.getHttpRequestMethod() = " + httpRequest.getHttpRequestMethod());
-                    System.out.println("httpRequest.getUrl() = " + httpRequest.getUrl());
-                    System.out.println("httpRequest.getUrlParameters().toString() = " + httpRequest.getUrlParameters().toString());
-                    System.out.println("httpRequest.getHeadersMap().get(\"host\") = " + httpRequest.getHeadersMap().get("content-type"));
+
+                    HttpParser httpParser = new HttpParser(new HttpBodyParserFactory());
+                    HttpRequest request = httpParser.parse(socket.getInputStream());
+                    System.out.println("-------------request created-------------------");
+                    System.out.println("request.getHttpRequestMethod() = " + request.getHttpRequestMethod());
+                    System.out.println("request.getUrl() = " + request.getUrl());
+                    System.out.println("request.getQueryParametersMap() = " + request.getQueryParametersMap());
+                    System.out.println("request.getHeadersMap() = " + request.getHeadersMap());
+                    System.out.println("request.getBodyMap() = " + request.getBodyMap());
 
                     OutputStream out = socket.getOutputStream();
                     DataOutputStream dataOutputStream = new DataOutputStream(out);

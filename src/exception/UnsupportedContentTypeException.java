@@ -1,6 +1,8 @@
 package exception;
 
-public class UnsupportedContentTypeException extends RuntimeException {
+import java.io.IOException;
+
+public class UnsupportedContentTypeException extends IOException {
     public UnsupportedContentTypeException(String message) {
         super(message);
     }

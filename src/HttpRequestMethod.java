@@ -10,7 +10,7 @@ public enum HttpRequestMethod {
             case "DELETE" -> HttpRequestMethod.DELETE;
             default -> throw new RuntimeException("request method that cant handle");
         };
-    }
+    };
 
     public static boolean isAvailableMethod(HttpRequestMethod method) {
         return switch (method) {
@@ -18,7 +18,7 @@ public enum HttpRequestMethod {
             case POST -> true;
             default -> false;
         };
-    }
+    };
 
 
 
