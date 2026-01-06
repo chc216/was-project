@@ -1,3 +1,5 @@
+import exception.UnsupportedContentTypeException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +14,7 @@ public class HttpRequest {
     private String url;
     private Map<String, String> urlParametersMap = new HashMap<>();
     private Map<String, String> headersMap = new HashMap<>();
+    private Object body;
 
     public HttpRequestMethod getHttpRequestMethod() {
         return httpRequestMethod;
@@ -51,13 +54,17 @@ public class HttpRequest {
             header = bufferedReader.readLine();
         }
 
-        //TODO: 요청 메서드에 따라 다르게 body 파싱 여부 다르게 처리하기
+        //TODO: http body 유무에 따라 다르게 body 파싱 여부 다르게 처리하기
         int len = Integer.parseInt(headersMap.get("content-length"));
-        char[] body = new char[len];
-        bufferedReader.read(body, 0, len);
-        parseBody(body, len, "json");
-
-
+        if (len > 0) {
+            char[] body = new char[len];
+            bufferedReader.read(body, 0, len);
+            RequestBodyParser requestBodyParser = switch (headersMap.get("content-type")) {
+                case "application/x-www-form-urlencoded" -> new UrlEncodedBodyParser();
+                default -> throw new UnsupportedContentTypeException(headersMap.get("content-type") + " doesn't supported");
+            };
+            this.body = requestBodyParser.parse(String.valueOf(body));
+        }
     }
 
     private void parseStartLine(String startLine) {
@@ -95,20 +102,20 @@ public class HttpRequest {
         headersMap.put(headerTokenizer.nextToken().toLowerCase(), headerTokenizer.nextToken());
     }
 
-    private void parseBody(char[] body, int len, String contentType) {
-        //x-www-form-urlencoded 형식만 지원
-        //TODO: contentType enum 만들기, 파싱 지원하지 않는 contentType 예외처리 로직 만들기
-        System.out.println(body);
-        StringTokenizer bodyTokenizer = new StringTokenizer(String.valueOf(body), "&");
-        while (bodyTokenizer.hasMoreTokens()) {
-            StringTokenizer keyValueTokenizer = new StringTokenizer(bodyTokenizer.nextToken(), "=");
-            String key = keyValueTokenizer.nextToken();
-            String value = keyValueTokenizer.nextToken();
-            System.out.println("value = " + value);
-            System.out.println("key = " + key);
-            //TODO: body content 종류에 따라 저장하는 방식도 달라져야함
-        }
-
-    }
+//    private void parseBody(char[] body, int len, String contentType) {
+//        //x-www-form-urlencoded 형식만 지원
+//        //TODO: contentType enum 만들기, 파싱 지원하지 않는 contentType 예외처리 로직 만들기
+//        System.out.println(body);
+//        StringTokenizer bodyTokenizer = new StringTokenizer(String.valueOf(body), "&");
+//        while (bodyTokenizer.hasMoreTokens()) {
+//            StringTokenizer keyValueTokenizer = new StringTokenizer(bodyTokenizer.nextToken(), "=");
+//            String key = keyValueTokenizer.nextToken();
+//            String value = keyValueTokenizer.nextToken();
+//            System.out.println("value = " + value);
+//            System.out.println("key = " + key);
+//            //TODO: body content 종류에 따라 저장하는 방식도 달라져야함
+//        }
+//
+//    }
 
 }
