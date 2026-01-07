@@ -21,10 +21,15 @@ public class HttpParser {
         parseStartLine(bufferedReader.readLine(), request);
         parseHeaders(bufferedReader, request);
 
-        Map<String, String> headersMap = request.getHeadersMap();
-        int contentLength = Integer.parseInt(headersMap.get("content-length"));
+        //content length를 확인하고 바디 파싱을 할지 말지 결정하는건 파서의 책임이다.
+        int contentLength = 0;
+        String contentLengthHeader = request.getHeader("content-length");
+
+        if (contentLengthHeader != null) {
+            contentLength = Integer.parseInt(contentLengthHeader);
+        }
         if (contentLength > 0) {
-            String contentType = headersMap.get("content-type");
+            String contentType = request.getHeader("content-type");
             HttpBodyParser bodyParser = httpBodyParserFactory.createBodyParser(contentType);
             char[] body = new char[contentLength];
             bufferedReader.read(body, 0, contentLength);
@@ -48,14 +53,15 @@ public class HttpParser {
         StringTokenizer urlTokenizer = new StringTokenizer(unparsedUrl, "?");
         String endpoint = urlTokenizer.nextToken();
         request.setUrl(endpoint);
-
-        String queryString = urlTokenizer.nextToken();
-        StringTokenizer queryParameterTokenizer = new StringTokenizer(queryString, "&");
-        Map<String, String> queryParametersMap = new HashMap<>();
-        while (queryParameterTokenizer.hasMoreTokens()) {
-            queryParametersMap.put(queryParameterTokenizer.nextToken(), queryParameterTokenizer.nextToken());
+        if (urlTokenizer.hasMoreTokens()) {
+            String queryString = urlTokenizer.nextToken();
+            StringTokenizer queryParameterTokenizer = new StringTokenizer(queryString, "&");
+            Map<String, String> queryParametersMap = new HashMap<>();
+            while (queryParameterTokenizer.hasMoreTokens()) {
+                queryParametersMap.put(queryParameterTokenizer.nextToken(), queryParameterTokenizer.nextToken());
+            }
+            request.setQueryParametersMap(queryParametersMap);
         }
-        request.setQueryParametersMap(queryParametersMap);
     }
 
     private void parseHeaders(BufferedReader bufferedReader, HttpRequest request) throws IOException {

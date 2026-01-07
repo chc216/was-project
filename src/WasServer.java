@@ -22,8 +22,8 @@ public class WasServer {
                     System.out.println("request.getHttpRequestMethod() = " + request.getHttpRequestMethod());
                     System.out.println("request.getUrl() = " + request.getUrl());
                     System.out.println("request.getQueryParametersMap() = " + request.getQueryParametersMap());
-                    System.out.println("request.getHeadersMap() = " + request.getHeadersMap());
-                    System.out.println("request.getBodyMap() = " + request.getBodyMap());
+//                    System.out.println("request.getHeadersMap() = " + request.getHeadersMap());
+//                    System.out.println("request.getBodyMap() = " + request.getBodyMap());
 
                     OutputStream out = socket.getOutputStream();
                     DataOutputStream dataOutputStream = new DataOutputStream(out);

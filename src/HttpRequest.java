@@ -1,12 +1,6 @@
-import exception.UnsupportedContentTypeException;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
+
 
 public class HttpRequest {
     //http 요청에 관련된 책임을 맡은 클래스
@@ -40,13 +34,6 @@ public class HttpRequest {
         return queryParametersMap;
     }
 
-    public Map<String, Object> getBodyMap() {
-        if (bodyMap == null) {
-            throw new RuntimeException();
-        }
-        return bodyMap;
-    }
-
     public HttpRequestMethod getHttpRequestMethod() {
         return httpRequestMethod;
     }
@@ -56,7 +43,20 @@ public class HttpRequest {
     }
 
 
-    public Map<String, String> getHeadersMap() {
-        return headersMap;
+    //header및 body는 빈값을 조회할때 예외를 던지면 안되는이유
+    //1. header, body는 빈값이 존재할 수도 있는 유연한 데이터임
+    //2. 근데 무조건 예외를 던져버리면 유연한 처리가 어려움 (바로 소켓 종료 로직으로 이어지기 때문에)
+    //3. 따라서 null값을 보낸 후 클라이언트에서 처리한다.
+    public String getHeader(String key) {
+        if (!headersMap.containsKey(key.toLowerCase())) {
+            return null;
+        }
+        return headersMap.get(key.toLowerCase());
+    }
+
+    public Object getBodyValue(String key) {
+        if (!bodyMap.containsKey(key)) {
+        }
+        return bodyMap.get(key);
     }
 }
