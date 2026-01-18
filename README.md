@@ -1,4 +1,4 @@
-## mini java was application server
+## mini java web application server project
 Java의 Socket API를 사용해 HTTP 요청/응답을 직접 처리하는
 학습용 HTTP 서버 프로젝트입니다.
 
