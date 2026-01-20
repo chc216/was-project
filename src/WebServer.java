@@ -5,17 +5,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class WebServer {
+    static private final int DEFAULT_PORT = 8080;
 
     public static void main(String[] args) throws Exception{
-        int port = 8080;
-        if (args == null || args.length == 0 ) {
+        int port = DEFAULT_PORT;
+        if (args != null && args.length != 0 ) {
             port = Integer.parseInt(args[0]);
         }
         ServerSocket serverSocket = new ServerSocket(port);
         while(true) {
             Socket socket = serverSocket.accept();
             try {
-
+                Router router = Router.getInstance();
+                router.start(socket);
             } catch (Exception e) {
                 String msg = e.getMessage();
                 System.out.println(msg);

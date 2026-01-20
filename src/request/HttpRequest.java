@@ -1,7 +1,5 @@
 package request;
 
-import java.util.Map;
-
 
 public class HttpRequest {
 
@@ -11,13 +9,25 @@ public class HttpRequest {
 데이터 가공 연산은 request객체에서 제공 (parser는 단지 inputstream을 raw데이터로 저장할 뿐이다.)
 모든 변수를 가지고 있던데에서 composition관계로 수정하여 각 메서드는 헤더는 헤더끼리, 바디는 바디끼리 묶어서 가독성과 유지보수성을 높임
 */
-    final private RequestStratLine requestStratLine;
-    final private RequestHeader requestHeader;
-    final private RequestBody requestBody;
+    final private HttpStartLine requestStratLine;
+    final private HttpHeader httpHeader;
+    final private HttpBody httpBody;
 
-    public HttpRequest(RequestStratLine requestStratLine, RequestHeader requestHeader, RequestBody requestBody) {
+    public HttpRequest(HttpStartLine requestStratLine, HttpHeader httpHeader, HttpBody httpBody) {
         this.requestStratLine = requestStratLine;
-        this.requestHeader = requestHeader;
-        this.requestBody = requestBody;
+        this.httpHeader = httpHeader;
+        this.httpBody = httpBody;
+    }
+
+    public HttpStartLine getRequestStratLine() {
+        return requestStratLine;
+    }
+
+    public HttpHeader getHttpHeader() {
+        return httpHeader;
+    }
+
+    public HttpBody getHttpBody() {
+        return httpBody;
     }
 }

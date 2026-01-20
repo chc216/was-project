@@ -1,13 +1,13 @@
 package request;
 
-public class RequestBody {
+public class HttpBody {
     private char[] body;
 
     public char[] getBody() {
         return body;
     }
 
-    public void setBody(char[] body) {
+    public HttpBody(char[] body) {
         this.body = body;
     }
 }

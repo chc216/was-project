@@ -10,16 +10,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-public class HttpParser {
+public class HttpParserUtils {
     static public HttpRequest parse(InputStream inputStream) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-        RequestStratLine requestStratLine = parseStartLine(br.readLine());
-        RequestHeader requestHeader = parseHeaders(br);
-        RequestBody requestBody = parseBody(br, requestHeader.getContentLength());
-        return new HttpRequest(requestStratLine, requestHeader, requestBody);
+        HttpStartLine requestStratLine = parseStartLine(br.readLine());
+        HttpHeader httpHeader = parseHeaders(br);
+        HttpBody httpBody = parseBody(br, httpHeader.getContentLength());
+        return new HttpRequest(requestStratLine, httpHeader, httpBody);
     }
 
-    static private RequestStratLine parseStartLine(String startLine) throws IOException{
+    static private HttpStartLine parseStartLine(String startLine) throws IOException{
         if (startLine == null || startLine.isEmpty()) {
             throw new IOException("start line is null");
         }
@@ -27,10 +27,10 @@ public class HttpParser {
         HttpRequestMethod requestMethod = HttpRequestMethod.httpMethodMapping(st.nextToken());
         String requestUrl = st.nextToken();
         String requestProtocol = st.nextToken();
-        return new RequestStratLine(requestMethod, requestUrl, requestProtocol);
+        return new HttpStartLine(requestMethod, requestUrl, requestProtocol);
     }
 
-    static private RequestHeader parseHeaders(BufferedReader bufferedReader) throws IOException {
+    static private HttpHeader parseHeaders(BufferedReader bufferedReader) throws IOException {
         Map<String, String> headers = new HashMap<>();
         String header = bufferedReader.readLine();
         while (!header.isEmpty()) {
@@ -40,19 +40,16 @@ public class HttpParser {
             headers.put(key.toLowerCase(), value.toLowerCase());
             header = bufferedReader.readLine();
         }
-        RequestHeader requestHeader = new RequestHeader();
-        requestHeader.setHeaders(headers);
-        return requestHeader;
+        return new HttpHeader(headers);
     }
 
-    static private RequestBody parseBody(BufferedReader bufferedReader, int length) throws IOException {
+    static private HttpBody parseBody(BufferedReader bufferedReader, int length) throws IOException {
         if(length == 0) {
             return null;
         }
         char[] body = new char[length];
         bufferedReader.read(body, 0, length);
-        RequestBody requestBody = new RequestBody();
-        requestBody.setBody(body);
-        return requestBody;
+
+        return new HttpBody(body);
     }
 }
