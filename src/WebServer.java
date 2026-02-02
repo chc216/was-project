@@ -22,7 +22,7 @@ public class WebServer {
                 Socket connection = serverSocket.accept();
 
                 //동시 요청 처리가 필요한데 코드가 길어지기 때문에 + webserver책임이 많아지기 때문에-> start메서드를 따로 객체로 처리해야한다.
-                //스레드 풀은 나중에 적용할 예정. 일단은 동시처리만 염두에 뒀음
+                //스레드 풀은 나중에 적용할 예정. 일단은 동시처리만 염두에 뒀음 -> 왜냐하면 10만명이 들어오면 쓰레드가 10만개가 생성된다.......
                 RequestHandler requestHandler = new RequestHandler(connection);
                 Thread thread = new Thread(requestHandler);
                 thread.start();

@@ -23,20 +23,12 @@ public class RequestHandler implements Runnable{
         //소켓으로 부터 스트림 받아와서 파싱 후 리퀘스트 생성 및 routing 지시
         //참고로 inputStream을 닫으면 소켓도 닫는다는 것을 이용한다.
         try (InputStream inputStream = socket.getInputStream()) {
-            System.out.println("task start");
             HttpRequest request = HttpParserUtils.parse(inputStream);
-            HttpResponse response = new HttpResponse(new HttpHeader(new HashMap<>()), new HttpBody(new byte[]));
-
+            HttpResponse response = new HttpResponse();
             Router router = Router.getInstance();
             router.route(request, response);
-
             //응답 처리
-            OutputStream outputStream = socket.getOutputStream();
-            outputStream.write(200);
-            outputStream.flush();
-            inputStream.close();
-            outputStream.close();
-            //응답 로직
+
         } catch (IllegalArgumentException e) {
             //parsing중 생성된 예외에 대해 처리하는 부분
             e.printStackTrace();

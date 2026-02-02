@@ -1,6 +1,8 @@
 package http;
 
 
+
+//request객체에선 해당 책임에 맞는 메서드만 노출시키고 내부 구현 노출을 줄인다. -> 각 메서드는 header, body등 객체에게 위임한다.
 public class HttpRequest {
 
 /*
@@ -24,7 +26,7 @@ public class HttpRequest {
     }
 
     public String getHeader(String key) {
-        return httpHeader.getHeader(key);
+        return httpHeader.get(key);
     }
 
     public int getContentLength() {

@@ -1,7 +1,6 @@
 import controller.Controller;
 import http.HttpRequest;
 import http.HttpResponse;
-import staticfile.StaticFileService;
 
 public class Router {
     public static final Router instance = new Router();
