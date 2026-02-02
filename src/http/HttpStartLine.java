@@ -1,9 +1,10 @@
-package request;
+package http;
 
 public class HttpStartLine {
     HttpRequestMethod method = null;
     String url = null;
     String protocol = null;
+    String host = null;
 
     public HttpStartLine(HttpRequestMethod method, String url, String protocol) {
         this.method = method;

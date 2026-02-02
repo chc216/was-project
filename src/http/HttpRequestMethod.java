@@ -1,4 +1,4 @@
-package request;
+package http;
 
 public enum HttpRequestMethod {
     GET,POST, PUT, PATCH, DELETE;
@@ -10,7 +10,7 @@ public enum HttpRequestMethod {
             case "PUT" -> HttpRequestMethod.PUT;
             case "PATCH" -> HttpRequestMethod.PATCH;
             case "DELETE" -> HttpRequestMethod.DELETE;
-            default -> throw new RuntimeException("request method that cant handle");
+            default -> throw new RuntimeException("http method that cant handle");
         };
     };
 

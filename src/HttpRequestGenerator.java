@@ -1,8 +1,3 @@
-import request.HttpRequest;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 public class HttpRequestGenerator {
 //    public HttpRequest generate(InputStream in) throws IOException {
 //        return

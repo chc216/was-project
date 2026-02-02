@@ -1,9 +1,10 @@
-package request;
+package http;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpHeader {
-    private Map<String, String> headers = null;
+    private final Map<String, String> headers;
 
     public HttpHeader(Map<String, String> headers) {
         this.headers = headers;
@@ -13,7 +14,7 @@ public class HttpHeader {
         return headers;
     }
 
-    public Object getHeader(String key) {
+    public String getHeader(String key) {
         if (headers.containsKey(key)) {
             return headers.get(key);
         }

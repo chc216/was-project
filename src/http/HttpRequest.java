@@ -1,4 +1,4 @@
-package request;
+package http;
 
 
 public class HttpRequest {
@@ -19,15 +19,23 @@ public class HttpRequest {
         this.httpBody = httpBody;
     }
 
-    public HttpStartLine getRequestStratLine() {
-        return requestStratLine;
+    public String getUrl() {
+        return requestStratLine.getUrl();
     }
 
-    public HttpHeader getHttpHeader() {
-        return httpHeader;
+    public String getHeader(String key) {
+        return httpHeader.getHeader(key);
     }
 
-    public HttpBody getHttpBody() {
-        return httpBody;
+    public int getContentLength() {
+        return httpHeader.getContentLength();
     }
+
+    public byte[] getBody() {
+        return httpBody.getBody();
+    }
+
+
+
+
 }
