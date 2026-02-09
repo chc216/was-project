@@ -14,6 +14,7 @@ public class StaticFileController implements Controller{
     @Override
     public void service(HttpRequest request, HttpResponse response) {
         String url = request.getUrl();
+        System.out.println(url);
         String contentType = getContentType(url);
         if(url.contains("..")) {
             //보안 위험으로 400 (요청 url을 ../../../한다면 root폴더에 접근이 가능해짐)
@@ -37,8 +38,9 @@ public class StaticFileController implements Controller{
         } else {
             //3. 없으면 400으로 응답
             response.setStatus(400);
-
         }
+
+        response.send();
     }
 
     private String getContentType(String url) {

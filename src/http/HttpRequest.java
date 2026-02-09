@@ -36,8 +36,4 @@ public class HttpRequest {
     public byte[] getBody() {
         return httpBody.getBody();
     }
-
-
-
-
 }

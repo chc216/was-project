@@ -10,11 +10,11 @@ public class HttpHeader {
     public HttpHeader(Map<String, String> headers) {
         this.headers = headers;
     }
-    public HttpHeader() {}
+    public HttpHeader() { this.headers = new HashMap<>();}
 
     public String get(String key) {
-        if (headers.containsKey(key)) {
-            return headers.get(key);
+        if (headers.containsKey(key.toLowerCase())) {
+            return headers.get(key.toLowerCase());
         }
         return null;
     }
@@ -23,7 +23,7 @@ public class HttpHeader {
         if (headers.containsKey(key)) {
             return false;
         }
-        headers.put(key, value);
+        headers.put(key.toLowerCase(), value);
         return true;
     }
     public Integer getContentLength() {
