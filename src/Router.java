@@ -1,6 +1,7 @@
 import controller.Controller;
 import http.HttpRequest;
 import http.HttpResponse;
+import http.StatusCode;
 
 public class Router {
     public static final Router instance = new Router();
@@ -31,7 +32,7 @@ public class Router {
         String url = request.getUrl();
         Controller controller = controllerMapper.getController(url);
         if (controller == null) {
-            response.setStatus(400);
+            response.setStatus(StatusCode.BAD_REQUEST);
         } else {
             controller.service(request, response);
         }

@@ -10,7 +10,7 @@ public class WebServer {
 
     public static void main(String[] args) throws IOException {
         int port = DEFAULT_PORT;
-        if (args != null && args.length != 0 ) {
+        if (args !=  null && args.length != 0 ) {
             port = Integer.parseInt(args[0]);
         }
         ServerSocket serverSocket = new ServerSocket(port);

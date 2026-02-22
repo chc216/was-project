@@ -28,12 +28,13 @@ public class RequestHandler implements Runnable{
             HttpResponse response = new HttpResponse(out);
             Router router = Router.getInstance();
             router.route(request, response);
+
+
+            response.send();
         } catch (IllegalArgumentException e) {
             //parsing중 생성된 예외에 대해 처리하는 부분
-//            e.printStackTrace();
         } catch (IOException e) {
             //소켓을 닫을때 생성된 에러이므로 딱히 할게 없음..
-//            e.printStackTrace();
         }
     }
 }

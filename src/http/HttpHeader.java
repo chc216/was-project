@@ -1,7 +1,9 @@
 package http;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class HttpHeader {
@@ -17,6 +19,10 @@ public class HttpHeader {
             return headers.get(key.toLowerCase());
         }
         return null;
+    }
+
+    public Set<String> getKeys() {
+        return headers.keySet();
     }
 
     public boolean put(String key, String value) {

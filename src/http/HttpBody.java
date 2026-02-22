@@ -16,6 +16,4 @@ public class HttpBody {
     public void setBody(byte[] body) {
         this.body = body;
     }
-
-
 }
