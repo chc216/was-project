@@ -4,9 +4,9 @@ import http.HttpResponse;
 import http.StatusCode;
 
 public class Router {
-    public static final Router instance = new Router();
+    final static public Router instance = new Router();
     //Controller매퍼에 의존중 -> 상관없음 만약 추후 변경 가능성이 생긴다면 그때가서 인터페이스로 리팩토링을 하는게 더 유연하다.
-    public static final ControllerMapper controllerMapper = new ControllerMapper();
+    final public ControllerMapper controllerMapper = new ControllerMapper();
     //멤버변수를 굳이 static으로 해야할 이유를 모르겠음.. router객체 자체가 싱글톤이면 내부 변수가 인스턴스 객체여도 static하게 유지되는거 아님?
     //router가 싱글톤인데 싱글톤 객체 내부에 composition관계로 존재하는 객체는 싱글톤이어야하는가?
     //-> router의 생명주기에 따라가야하므로 그냥 인스턴스 객체로 존재하면 된다. (이래도 멤버 객체들은 싱글톤으로 존재할 수 있음)

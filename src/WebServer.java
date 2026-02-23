@@ -4,6 +4,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.concurrent.ThreadPoolExecutor;
 
 
@@ -25,8 +26,15 @@ public class WebServer {
                 poolSize = Integer.parseInt(args[1]);
             }
         }
-        Thread thread = new Thread(new NetworkService(port, poolSize));
+        NetworkService service = new NetworkService(port, poolSize);
+        Thread thread = new Thread(service);
         thread.start();
+        System.out.println("서버가 시작되었습니다. q를 누르면 종료됩니다.");
+        Scanner sc = new Scanner(System.in);
+        if (sc.nextLine().equals("q")) {
+            System.out.println("서버를 종료합니다.");
+            service.stopService();
+        }
     }
     //webserver layer이므로 해당 메서드에서 요청/응답 객체를 생성하여 어플리케이션 레이어에서 처리하고 가져와야함
     // -> 그리고 webserver layer가 응답의 책임을 갖기 때문이다.

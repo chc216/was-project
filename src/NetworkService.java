@@ -22,4 +22,14 @@ public class NetworkService implements Runnable {
             threadPool.shutdown();
         }
     }
+
+    public void stopService() {
+        try {
+            server.close();
+        } catch (IOException e) {
+            System.out.println("소켓 닫는 중 문제 발생");
+        }
+        threadPool.shutdown();
+
+    }
 }
