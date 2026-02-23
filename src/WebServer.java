@@ -4,32 +4,29 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ThreadPoolExecutor;
 
+
+//수정 내용: main메서드는 진입점 역할만 해야하고, 따로 thread에 작업을 할당하여 accept를 기다릴 수 있도록 한다. 그 동안 main에서는 다른 작업을 할 수 있다는 장점이 생기며
+//객체지향적으로 책임이 분리된다는 장점도 생긴다.
 public class WebServer {
     static private final int DEFAULT_PORT = 8080;
+    static private final int DEFAULT_POOL_SIZE = 200;
+    //톰캣을 따라 만드는게 목적이기 때문에 톰캣의 스레드풀 맥스 사이즈를 사용함
 
     public static void main(String[] args) throws IOException {
         int port = DEFAULT_PORT;
-        if (args !=  null && args.length != 0 ) {
-            port = Integer.parseInt(args[0]);
-        }
-        ServerSocket serverSocket = new ServerSocket(port);
-        while(true) {
-            try{
-                //try with resource문을 사용하면 안되는 이유는 소켓 close는 각 쓰레드 내부에서 호출해야함
-                //try with resource문을 사용하면 쓰레드는 시작 됐는데 외부에서는 try문 안의 코드가 다 실행된 것으로 간주하여 자동 close호출해버림
-                //쓰레드는 시작도안했늗ㄴ ㅔ
-                Socket connection = serverSocket.accept();
-
-                //동시 요청 처리가 필요한데 코드가 길어지기 때문에 + webserver책임이 많아지기 때문에-> start메서드를 따로 객체로 처리해야한다.
-                //스레드 풀은 나중에 적용할 예정. 일단은 동시처리만 염두에 뒀음 -> 왜냐하면 10만명이 들어오면 쓰레드가 10만개가 생성된다.......
-                RequestHandler requestHandler = new RequestHandler(connection);
-                Thread thread = new Thread(requestHandler);
-                thread.start();
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
+        int poolSize = DEFAULT_POOL_SIZE;
+        if (args != null && args.length != 0) {
+            if (args.length == 1) {
+                port = Integer.parseInt(args[0]);
+            } else if (args.length == 2) {
+                port = Integer.parseInt(args[0]);
+                poolSize = Integer.parseInt(args[1]);
             }
         }
+        Thread thread = new Thread(new NetworkService(port, poolSize));
+        thread.start();
     }
     //webserver layer이므로 해당 메서드에서 요청/응답 객체를 생성하여 어플리케이션 레이어에서 처리하고 가져와야함
     // -> 그리고 webserver layer가 응답의 책임을 갖기 때문이다.
