@@ -2,10 +2,7 @@
 
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Scanner;
-import java.util.concurrent.ThreadPoolExecutor;
 
 
 //수정 내용: main메서드는 진입점 역할만 해야하고, 따로 thread에 작업을 할당하여 accept를 기다릴 수 있도록 한다. 그 동안 main에서는 다른 작업을 할 수 있다는 장점이 생기며

@@ -1,20 +1,19 @@
 import controller.Controller;
 import controller.DummyController;
-import controller.StaticFileController;
+import controller.StaticFileHandler;
 
 import java.util.HashMap;
 
 public class ControllerMapper {
     private final HashMap<String, Controller> mapper = new HashMap<>();
-    private final StaticFileController staticFileController = new StaticFileController();
+    private final StaticFileHandler staticFileHandler = new StaticFileHandler();
     public ControllerMapper() {
         mapper.put("/", new DummyController());
-        mapper.put("/*.*", new StaticFileController());
     }
 
     public Controller getController(String url) {
         if (url.contains(".")) {
-            return mapper.get("/*.*");
+            return staticFileHandler;
         } else {
             if (!mapper.containsKey(url)) {
                 return null;
