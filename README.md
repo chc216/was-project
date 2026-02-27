@@ -64,3 +64,15 @@ java -jar WebServer.jar 8000 100
 ```
 
 
+## Live Demo
+[**이미지 서빙1 (.jpg)**](http://54.167.107.60/image/firecat.jpg)
+
+[**이미지 서빙2 (.jpg)**](http://54.167.107.60/image/image.jpg)
+
+[**이미지 서빙 (.png)**](http://54.167.107.60/image/pngfile.png)
+
+[**html 서빙**](http://54.167.107.60/test.html)
+
+[**기본 컨트롤러 요청**](http://54.167.107.60/)
+
+[**이 외의 요청(400 bad request)**](http://54.167.107.60/adsfsdf)
