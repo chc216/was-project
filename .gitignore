@@ -1,8 +1,12 @@
 ### IntelliJ IDEA ###
+*.iml
 .idea/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+something.pem
+ubuntu@54.167.107.60
+*.jar
 
 ### Eclipse ###
 .apt_generated
